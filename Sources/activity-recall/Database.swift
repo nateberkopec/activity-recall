@@ -15,7 +15,7 @@ final class Database {
             let message = handle.map { String(cString: sqlite3_errmsg($0)) } ?? "cannot open"
             sqlite3_close(handle)
             handle = nil
-            let executable = Bundle.main.executablePath ?? CommandLine.arguments[0]
+            let executable = URL(fileURLWithPath: Bundle.main.executablePath ?? CommandLine.arguments[0]).resolvingSymlinksInPath().path
             throw Failure(description: "\(path): \(message). Grant Full Disk Access to \(executable).")
         }
     }
