@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
 
 jobs:
   release:
@@ -26,3 +28,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes activity-recall-*-macos-arm64.tar.gz
+      - uses: jdx/packslip@693d02c49f6e1c8a0cc797472dc3fa53f0a6c955 # v1.9.1
+        with:
+          artifacts: activity-recall-*-macos-arm64.tar.gz
+          bin: activity-recall

@@ -22,7 +22,7 @@ struct MCP {
             return [
                 "protocolVersion": params["protocolVersion"] as? String ?? "2025-06-18",
                 "capabilities": ["tools": [:]],
-                "serverInfo": ["name": "activity-recall", "version": "0.1.0"],
+                "serverInfo": ["name": "activity-recall", "version": "0.1.1"],
             ]
         case "ping":
             return [:]
