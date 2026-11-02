@@ -4,7 +4,8 @@ enum Photos {
     static let sql = """
     SELECT a.ZADDEDDATE, a.ZDATECREATED, a.ZKIND, a.ZISDETECTEDSCREENSHOT, a.ZKINDSUBTYPE,
       a.ZUNIFORMTYPEIDENTIFIER, a.ZWIDTH, a.ZHEIGHT, x.ZORIGINALFILENAME, x.ZTITLE,
-      x.ZACCESSIBILITYDESCRIPTION, x.ZIMPORTEDBYBUNDLEIDENTIFIER, x.ZIMPORTEDBYDISPLAYNAME
+      x.ZACCESSIBILITYDESCRIPTION,
+      coalesce(x.ZIMPORTEDBYDISPLAYNAME, x.ZIMPORTEDBYBUNDLEIDENTIFIER) AS imported_by
     FROM ZASSET a
     LEFT JOIN ZADDITIONALASSETATTRIBUTES x ON x.ZASSET = a.Z_PK
     WHERE a.ZADDEDDATE >= ? AND a.ZADDEDDATE < ? AND a.ZTRASHEDSTATE = 0 AND a.ZHIDDEN = 0
@@ -27,7 +28,7 @@ enum Photos {
                 "original_filename": row["ZORIGINALFILENAME"] ?? NSNull(),
                 "title": row["ZTITLE"] ?? NSNull(),
                 "description": row["ZACCESSIBILITYDESCRIPTION"] ?? NSNull(),
-                "imported_by": row["ZIMPORTEDBYDISPLAYNAME"] ?? row["ZIMPORTEDBYBUNDLEIDENTIFIER"] ?? NSNull(),
+                "imported_by": row["imported_by"] ?? NSNull(),
             ]
         }
     }

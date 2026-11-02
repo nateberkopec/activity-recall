@@ -20,7 +20,11 @@ enum Messages {
         let database = try Database(path: Paths.messages)
         let newest = try database.scalar("SELECT max(date) FROM message") as? Int64 ?? 0
         let scale = newest > 1_000_000_000_000 ? 1_000_000_000.0 : 1.0
-        let bindings: [Any] = [Int64(query.appleStart * scale), Int64(query.appleEnd * scale)] + query.pageBindings
+        guard let start = Int64(exactly: (query.appleStart * scale).rounded()),
+              let end = Int64(exactly: (query.appleEnd * scale).rounded()) else {
+            throw Failure(description: "start and end are outside the Messages timestamp range")
+        }
+        let bindings: [Any] = [start, end] + query.pageBindings
         return query.page(try database.rows(sql, bindings)) { row in
             let fromMe = row["is_from_me"] as? Int64 == 1
             return [

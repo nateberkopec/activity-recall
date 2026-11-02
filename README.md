@@ -11,4 +11,4 @@ activity-recall mcp     # stdio MCP server for agents
 
 Every tool takes `start` and `end` ISO 8601 timestamps at most 8 days apart, plus `limit` and `offset` for paging. Databases are opened read-only. Arbitrary SQL is not exposed.
 
-The binary is ad-hoc signed, so macOS ties its Full Disk Access grant to this exact build. Re-grant after every rebuild or upgrade.
+Before granting Full Disk Access, re-sign the installed binary with hardened runtime so other processes cannot inject libraries into it: `codesign --force --sign - --options runtime <binary>`. The ad-hoc signature ties the grant to this exact build, so re-grant after every rebuild or upgrade.
